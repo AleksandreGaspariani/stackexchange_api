@@ -55,9 +55,6 @@ class UserController extends Controller
     }
 
     public function sendRequest($filters,$param){
-        config('api.base_url');
-        $baseUrl = 'https://api.stackexchange.com/';
-        $baseVersion = '2.3/';
         $baseHeaders = [
             'Access-Control-Request-Method' => 'application/json',
             'content-type' => 'application/json',
@@ -74,7 +71,7 @@ class UserController extends Controller
         // $baseFilter += $newArray;
         
 
-            $detailUrl = $baseUrl.$baseVersion.$param;
+            $detailUrl = config('base.base_url').config('base.base_version').$param;
             $res = Http::withHeaders($baseHeaders)->get($detailUrl, $baseFilter);
             return $res->json();
         
