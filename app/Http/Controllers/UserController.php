@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\ApiService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -23,10 +21,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $response = $this->api
+        $res = $this->api
             ->addParam(['order' => 'desc'])
             ->sendRequest('users');
-        return $response;
+
+        return $res;
     }
 
     /**

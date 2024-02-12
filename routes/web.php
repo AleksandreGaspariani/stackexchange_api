@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -20,3 +21,6 @@ Route::get('/', function () {
 
 Route::get('/users',[UserController::class,'index']);
 Route::get('/users/{id}',[UserController::class,'show']);
+
+Route::get('/questions',[QuestionController::class, 'index']);
+Route::get('/questions/{id}',[QuestionController::class, 'show']);
