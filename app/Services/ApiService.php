@@ -42,9 +42,9 @@ class ApiService
 
         $res = Http::withHeaders($this->baseHeaders)->get($detailUrl, $baseFilter);
 
-        if($res->ok()){
+        if($res->successful()){
             return $res->json();
-        }elseif ($res->badRequest()){
+        }elseif ($res->failed()){
             throw new \Exception('API Error.');
         };
 
