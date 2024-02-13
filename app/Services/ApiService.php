@@ -8,6 +8,7 @@ use Mockery\Exception;
 class ApiService
 {
     public string $url;
+    public string $version;
     public array $params = [];
     public array $baseHeaders = [
         'Access-Control-Request-Method' => 'application/json',
@@ -16,6 +17,7 @@ class ApiService
     public function __construct()
     {
         $this->url = config('base.base_url');
+        $this->version = config('base.base_version');
     }
 
     public function addParam($param){
@@ -36,10 +38,18 @@ class ApiService
 
         $baseFilter = array_merge($baseFilter, $this->params);
 
-        $detailUrl = $this->url.config('base.base_version').$endPoint;
+        $detailUrl = $this->url.$this->version.$endPoint;
 
         $res = Http::withHeaders($this->baseHeaders)->get($detailUrl, $baseFilter);
-        return $res->json();
+
+        if(in_array($res->status(),[200, 202])){
+            return $res->json();
+        }else{
+            return [
+                'status' => $res->status(),
+                'message' => 'API Error'
+            ];
+        };
 
     }
 }
