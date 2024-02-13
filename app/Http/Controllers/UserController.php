@@ -2,19 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ApiService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
+
+
+    public function __construct(
+        public ApiService $api
+    )
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $response = $this->sendRequest(['order' => 'desc'],'users');
-        return $response;
+        $res = $this->api
+            ->addParam(['order' => 'desc'])
+            ->sendRequest('users');
+
+        return $res;
     }
 
     /**
@@ -38,11 +49,16 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = $this->sendRequest([],'users/'.$id);
+        $user = $this->api
+            ->sendRequest('users/'.$id);
 
-        $questions = $this->sendRequest(['filter'=>'total'],'users/' .$id . '/questions');
+        $questions = $this->api
+            ->addParam(['filter' => 'total'])
+            ->sendRequest('users/' .$id . '/questions');
 
-        $answers = $this->sendRequest(['filter'=>'total'],'users/'.$id.'/answers');
+        $answers = $this->api
+            ->addParam(['filter' => 'total'])
+            ->sendRequest('users/'.$id.'/answers');
 
         // dd($answers->json());
         return response()->json([
@@ -50,32 +66,11 @@ class UserController extends Controller
             'Total Answers'=> $answers['total'],
             'Total Quetions'=> $questions['total'],
         ]);
-        
+
 
     }
 
-    public function sendRequest($filters,$param){
-        $baseHeaders = [
-            'Access-Control-Request-Method' => 'application/json',
-            'content-type' => 'application/json',
-        ];
 
-        $baseFilter = [
-            'site' => 'stackoverflow',
-        ];
-
-        $baseFilter = array_merge($baseFilter, $filters);
-
-        // $baseFilter['leqso'] = 'rame';
-        // $newArray = ['axali' => 2]; 
-        // $baseFilter += $newArray;
-        
-
-            $detailUrl = config('base.base_url').config('base.base_version').$param;
-            $res = Http::withHeaders($baseHeaders)->get($detailUrl, $baseFilter);
-            return $res->json();
-        
-    }
 
     /**
      * Show the form for editing the specified resource.
