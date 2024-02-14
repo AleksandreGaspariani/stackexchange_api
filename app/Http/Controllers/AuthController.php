@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class AuthController extends Controller
 {
-    public function login(Request $request){
+    public function login(LoginRequest $request){
 
-        $creds = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
+        $creds = $request->validated();
 
         if (Auth::attempt($creds)){
 
-            $token = Auth::user()->createToken('myToken')->plainTextToken;
+            $token = Auth::user()->createToken(config('auth.tokenName'))->plainTextToken;
 
             $response = [
                 'user' => Auth::user(),
                 'token' => $token
             ];
 
-            return response($response, 200);
+            return response()->json($response);
 
         }else {
             return response([

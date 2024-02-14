@@ -14,16 +14,21 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+//
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/register',[AuthController::class, 'register']);
+Route::post('/login',[AuthController::class, 'login']);
+Route::post('/logout',[AuthController::class, 'logout']);
 
-Route::post('register',[AuthController::class, 'register']);
-Route::post('login',[AuthController::class, 'login']);
+Route::prefix('ext')->group(function(){
 
-Route::group(['middleware' => ['auth:sanctum']], function(){
+    Route::get('/users',[UserController::class,'index']);
+    Route::get('/users/{id}',[UserController::class,'show']);
 
-    Route::post('logout',[AuthController::class, 'logout']);
+    Route::get('/questions',[QuestionController::class, 'index']);
+    Route::get('/questions/{id}',[QuestionController::class, 'show']);
 
-});
+})->middleware('auth:sanctum');

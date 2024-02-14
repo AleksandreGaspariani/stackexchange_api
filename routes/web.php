@@ -20,8 +20,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/users',[UserController::class,'index']);
-Route::get('/users/{id}',[UserController::class,'show']);
-
-Route::get('/questions',[QuestionController::class, 'index']);
-Route::get('/questions/{id}',[QuestionController::class, 'show']);
