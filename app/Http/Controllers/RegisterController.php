@@ -18,13 +18,11 @@ class RegisterController extends Controller
 
         $hashedPass = Hash::make($validated['password']);
 
-        $user = User::create([
+        return User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $hashedPass
         ]);
-
-        return $user;
 
     }
 }
