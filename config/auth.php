@@ -18,6 +18,10 @@ return [
         'passwords' => 'users',
     ],
 
+
+    'tokenName' => 'myToken',
+
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
