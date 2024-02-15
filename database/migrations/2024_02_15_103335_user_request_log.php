@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_request_log', function (Blueprint $table) {
             $table->id();
-            $table->decimal('user_id');
-            $table->string('response_body');
+            $table->integer('user_id');
+            $table->json('response_body');
+            $table->json('headers');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use App\Models\UserSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -45,6 +46,13 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password'])
+        ]);
+
+//      Creating setting for registered user
+        UserSettings::create([
+            'user_id' => $user->id,
+            'max_requests' => 10,
+            'requests_sent' => 0
         ]);
 
         $token = $user->createToken('myToken')->plainTextToken;

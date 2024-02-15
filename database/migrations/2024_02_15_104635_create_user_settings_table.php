@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_settings', function (Blueprint $table) {
             $table->id();
-            $table->decimal('user_id');
-            $table->decimal('max_requests');
-            $table->decimal('requests_sent');
+            $table->integer('user_id');
+            $table->integer('max_requests');
+            $table->integer('requests_sent');
             $table->timestamps();
         });
     }

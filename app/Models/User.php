@@ -45,7 +45,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function responsLogs(){
+
+    public function hasRequestLogs(){
         return $this->hasMany(UserRequestLog::class);
+    }
+
+    public function hasUserSetting(){
+        return $this->hasOne(UserSettings::class);
     }
 }

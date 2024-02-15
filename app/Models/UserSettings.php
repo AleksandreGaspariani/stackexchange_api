@@ -10,11 +10,16 @@ class UserSettings extends Model
     use HasFactory;
 
     protected $table = 'user_settings';
-    protected $fields = [
+
+    protected $fillable = [
         'user_id',
         'max_requests',
         'requests_sent'
     ];
 
-    
+    public function hasUser()
+    {
+        return $this->hasOne(User::class);
+    }
+
 }
