@@ -24,9 +24,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        dd($request['bearer_token']);
 
-        $userId = \auth('sanctum')->user()->id;
         $userSetting = \auth('sanctum')->user()->UserSetting;
 
         if ($userSetting['requests_sent'] < $userSetting['max_requests']){
