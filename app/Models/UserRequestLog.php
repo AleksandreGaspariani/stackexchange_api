@@ -16,7 +16,7 @@ class UserRequestLog extends Model
         'response_body'
     ];
 
-    public function hasUser(){
+    public function User(){
         return $this->belongsTo(User::class);
     }
 }

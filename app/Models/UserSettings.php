@@ -17,7 +17,7 @@ class UserSettings extends Model
         'requests_sent'
     ];
 
-    public function hasUser()
+    public function User()
     {
         return $this->hasOne(User::class);
     }

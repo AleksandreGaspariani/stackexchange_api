@@ -46,11 +46,11 @@ class User extends Authenticatable
     ];
 
 
-    public function hasRequestLogs(){
+    public function UserRequestLog(){
         return $this->hasMany(UserRequestLog::class);
     }
 
-    public function hasUserSetting(){
+    public function UserSetting(){
         return $this->hasOne(UserSettings::class);
     }
 }
