@@ -18,7 +18,6 @@ return [
         'passwords' => 'users',
     ],
 
-
     'tokenName' => 'myToken',
 
 
@@ -42,6 +41,10 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'sanctum',
             'provider' => 'users',
         ],
     ],

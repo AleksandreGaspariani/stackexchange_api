@@ -45,6 +45,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $with = [
+//        'UserSetting',
+    ];
 
     public function UserRequestLog(){
         return $this->hasMany(UserRequestLog::class);

@@ -27,25 +27,18 @@ class RequestLogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-//        before
 
-        $response = $next($request);
-
-//        After
+        $userSetting = auth('sanctum')->user()->UserSetting;
+        $response = response()->json(['message'=>'You dont have permission to send more requests']);
+        if($userSetting->requests_sent < $userSetting->max_requests){
+            $response = $next($request);
+            UserSettings::where('user_id',auth('sanctum')->user()->id)->increment('requests_sent');
+        }
 
         $this->log
             ->collectData($request,$response->getContent());
 
-        $userSetting = UserSettings::where('user_id',auth('sanctum')->user()->id);
-
-        if ($userSetting['requests_sent'] < $userSetting['max_requests']){
-            return $response;
-        }else {
-            $response = [
-                'message' => 'You dont have permission to send more requests',
-            ];
-            return response()->json($response);
-        }
+       return $response;
     }
 
 }

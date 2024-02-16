@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserRequestLog;
 use App\Models\UserSettings;
 use App\Services\ApiService;
+use App\Services\RequestLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,8 @@ class UserController extends Controller
 
 
     public function __construct(
-        public ApiService $api
+        public ApiService $api,
+        public RequestLogService $log
     )
     {
 
@@ -25,31 +27,11 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $userSetting = \auth('sanctum')->user()->UserSetting;
+        $response = $this->api
+            ->addParam(['order' => 'desc'])
+            ->sendRequest('users');
 
-        if ($userSetting['requests_sent'] < $userSetting['max_requests']){
-
-            $response = $this->api
-                ->addParam(['order' => 'desc'])
-                ->sendRequest('users');
-
-            UserSettings::find($userSetting['id'])->update([
-                'requests_sent' => $userSetting['requests_sent']+1
-            ]);
-
-            // UserRequestLog::create([
-            //    'user_id' => $userId,
-            //    'response_body' => $responseToString
-            // ]);
-
-            return $response;
-
-        }else {
-            $response = [
-                'message' => 'You dont have permission to send more requests',
-            ];
-            return response()->json($response);
-        }
+        return $response;
 
     }
 

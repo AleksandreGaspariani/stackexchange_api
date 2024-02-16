@@ -12,8 +12,18 @@ class UserRequestLog extends Model
     protected $table = 'user_request_log';
 
     protected $fillable = [
+        'url',
+        'method',
         'user_id',
-        'response_body'
+        'request_body',
+        'response_body',
+        'headers'
+    ];
+
+    protected $casts = [
+        'request_body' => 'array',
+        'response_body' => 'array',
+        'headers' => 'array'
     ];
 
     public function User(){
