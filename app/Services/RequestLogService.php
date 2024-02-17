@@ -29,9 +29,11 @@ class RequestLogService
 
     public static function checkUser(){
 
-        $numOfRequestsToday = Auth::user()->UserRequestLog()->where('created_at','>',today())->where('passed',1)->count();
+        $user = Auth::user();
 
-        $numOfRequestsToday >= 3 ? $permission = false : $permission = true;
+        $numOfRequestsToday = $user->UserRequestLog()->where('created_at','>',today())->where('passed',1)->count();
+
+        $numOfRequestsToday >= $user->UserSetting()->max_requests ? $permission = false : $permission = true;
 
         return $permission;
     }
