@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('url');
             $table->string('method');
+            $table->integer('passed')->default(0);
             $table->json('request_body');
             $table->json('response_body');
             $table->json('headers');

@@ -17,7 +17,8 @@ class UserRequestLog extends Model
         'user_id',
         'request_body',
         'response_body',
-        'headers'
+        'headers',
+        'passed'
     ];
 
     protected $casts = [

@@ -24,7 +24,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
 
         $response = $this->api
@@ -67,13 +67,11 @@ class UserController extends Controller
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/'.$id.'/answers');
 
-        // dd($answers->json());
         return response()->json([
             'Username' => $user['items'][0]['display_name'],
             'Total Answers'=> $answers['total'],
             'Total Quetions'=> $questions['total'],
         ]);
-
 
     }
 
