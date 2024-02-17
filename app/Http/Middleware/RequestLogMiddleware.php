@@ -30,7 +30,8 @@ class RequestLogMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (!RequestLogService::checkUser()){
+        if (!RequestLogService::checkUser()) /* @param \Boolean */
+        {
             $response = response()->json(['message'=>'You dont have permission to send more requests']);
         }else {
             $response = $next($request);

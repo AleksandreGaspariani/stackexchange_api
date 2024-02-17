@@ -8,6 +8,7 @@ use App\Models\UserSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use function Laravel\Prompts\alert;
 
 
 class AuthController extends Controller
@@ -65,7 +66,7 @@ class AuthController extends Controller
         return response($response,201);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         Auth::user()->tokens()->delete();
 

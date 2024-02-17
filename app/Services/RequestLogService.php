@@ -31,11 +31,9 @@ class RequestLogService
 
         $user = Auth::user();
 
-        $numOfRequestsToday = $user->UserRequestLog()->where('created_at','>',today())->where('passed',1)->count();
+        $numOfRequestsToday = $user->log->whereDate('created_at',today())->where('passed',1)->count();
 
-        $numOfRequestsToday >= $user->UserSetting()->max_requests ? $permission = false : $permission = true;
-
-        return $permission;
+        return $numOfRequestsToday >= $user->settings->max_requests ? $permission = false : $permission = true;
     }
 
 }

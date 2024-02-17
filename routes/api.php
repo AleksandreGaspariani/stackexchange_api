@@ -24,7 +24,6 @@ use App\Http\Middleware\RequestLogMiddleware;
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
-Route::post('/logout',[AuthController::class, 'logout']);
 
 Route::group(['prefix'=>'ext','middleware'=>['auth:sanctum','log']],function(){
 
@@ -34,5 +33,6 @@ Route::group(['prefix'=>'ext','middleware'=>['auth:sanctum','log']],function(){
     Route::get('/questions',[QuestionController::class, 'index']);
     Route::get('/questions/{id}',[QuestionController::class, 'show']);
 
+    Route::post('/logout',[AuthController::class, 'logout']);
 });
 
