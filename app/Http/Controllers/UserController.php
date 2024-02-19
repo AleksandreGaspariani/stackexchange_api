@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserRequestLog;
+use App\Models\UserSettings;
 use App\Services\ApiService;
+use App\Services\RequestLogService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
 
 
     public function __construct(
-        public ApiService $api
+        public ApiService $api,
+        public RequestLogService $log
     )
     {
 
@@ -21,11 +26,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $res = $this->api
+
+        $response = $this->api
             ->addParam(['order' => 'desc'])
             ->sendRequest('users');
 
-        return $res;
+        return response()->json($response);
+
     }
 
     /**
@@ -52,6 +59,12 @@ class UserController extends Controller
         $user = $this->api
             ->sendRequest('users/'.$id);
 
+        if (empty($user['items'])){
+            return response()->json([
+                'message' => 'user not found.',
+            ], 400);
+        };
+
         $questions = $this->api
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/' .$id . '/questions');
@@ -60,13 +73,13 @@ class UserController extends Controller
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/'.$id.'/answers');
 
-        // dd($answers->json());
+
+
         return response()->json([
             'Username' => $user['items'][0]['display_name'],
             'Total Answers'=> $answers['total'],
             'Total Quetions'=> $questions['total'],
         ]);
-
 
     }
 

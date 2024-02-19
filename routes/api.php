@@ -5,6 +5,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\RequestLogMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +24,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
-Route::post('/logout',[AuthController::class, 'logout']);
 
-Route::prefix('ext')->group(function(){
+Route::group(['prefix'=>'ext','middleware'=>['auth:sanctum','log']],function(){
 
     Route::get('/users',[UserController::class,'index']);
     Route::get('/users/{id}',[UserController::class,'show']);
@@ -33,4 +33,6 @@ Route::prefix('ext')->group(function(){
     Route::get('/questions',[QuestionController::class, 'index']);
     Route::get('/questions/{id}',[QuestionController::class, 'show']);
 
-})->middleware('auth:sanctum');
+    Route::post('/logout',[AuthController::class, 'logout']);
+});
+
