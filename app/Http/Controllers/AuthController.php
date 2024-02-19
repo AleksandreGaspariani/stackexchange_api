@@ -31,7 +31,7 @@ class AuthController extends Controller
         }else {
             return response()->json([
                 'message' => 'Bad Creds'
-            ]);
+            ], 400);
         }
     }
 
@@ -50,28 +50,28 @@ class AuthController extends Controller
         ]);
 
 //      Creating setting for registered user
-        UserSettings::create([
+
+        $user->settings()->create([
             'user_id' => $user->id,
-            'max_requests' => 10,
-            'requests_sent' => 0
+            'max_requests' => 10
         ]);
 
-        $token = $user->createToken('myToken')->plainTextToken;
+        $token = $user->createToken(config('auth.tokenName'))->plainTextToken;
 
         $response = [
             'user' => $user,
             'token' =>$token
         ];
 
-        return response($response,201);
+        return response()->json($response);
     }
 
     public function logout()
     {
-        Auth::user()->tokens()->where('name',config('auth.tokenName'))->delete();
+        Auth::user()->tokens()->where('token', request()->bearerToken())->delete();
 
         return response()->json([
             'message' => 'Logged Out'
-        ], 200);
+        ]);
     }
 }

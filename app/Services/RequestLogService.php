@@ -22,7 +22,7 @@ class RequestLogService
             'headers' => $request->header()
         ]);
 
-        return response()->json()([
+        return response()->json([
             'message' => 'data collected successfully',
         ]);
     }
@@ -31,9 +31,9 @@ class RequestLogService
 
         $user = Auth::user();
 
-        $numOfRequestsToday = $user->log->whereDate('created_at',today())->where('passed',1)->count();
+        $numOfRequestsToday = $user->log()->whereToday()->wherePassed()->count();
 
-        return $numOfRequestsToday >= $user->settings->max_requests ? $permission = false : $permission = true;
+        return !($numOfRequestsToday >= $user->settings->max_requests);
     }
 
 }

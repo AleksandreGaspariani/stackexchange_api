@@ -31,7 +31,7 @@ class UserController extends Controller
             ->addParam(['order' => 'desc'])
             ->sendRequest('users');
 
-        return $response;
+        return response()->json($response);
 
     }
 
@@ -59,6 +59,12 @@ class UserController extends Controller
         $user = $this->api
             ->sendRequest('users/'.$id);
 
+        if (empty($user['items'])){
+            return response()->json([
+                'message' => 'user not found.',
+            ], 400);
+        };
+
         $questions = $this->api
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/' .$id . '/questions');
@@ -66,6 +72,8 @@ class UserController extends Controller
         $answers = $this->api
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/'.$id.'/answers');
+
+
 
         return response()->json([
             'Username' => $user['items'][0]['display_name'],

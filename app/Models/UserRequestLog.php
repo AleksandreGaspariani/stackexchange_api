@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserRequestLog extends Model
 {
@@ -31,5 +32,15 @@ class UserRequestLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    
+    public function scopeWhereToday(Builder $query): void
+    {
+        $query->whereDate('created_at', today());
+    }
+
+    public function scopeWherePassed(Builder $query): void
+    {
+        $query->whereDate('passed', 1);
+    }
+
+
 }
