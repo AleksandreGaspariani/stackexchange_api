@@ -13,8 +13,7 @@ class UserSettings extends Model
 
     protected $fillable = [
         'user_id',
-        'max_requests',
-        'requests_sent'
+        'max_requests'
     ];
 
     public function User()

@@ -22,9 +22,9 @@ class RequestLogService
             'headers' => $request->header()
         ]);
 
-        return response([
+        return response()->json()([
             'message' => 'data collected successfully',
-        ], 200);
+        ]);
     }
 
     public static function checkUser(){

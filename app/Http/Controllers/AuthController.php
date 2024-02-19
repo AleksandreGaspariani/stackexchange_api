@@ -29,9 +29,9 @@ class AuthController extends Controller
             return response()->json($response);
 
         }else {
-            return response([
+            return response()->json([
                 'message' => 'Bad Creds'
-            ], 401);
+            ]);
         }
     }
 
@@ -70,7 +70,7 @@ class AuthController extends Controller
     {
         Auth::user()->tokens()->where('name',config('auth.tokenName'))->delete();
 
-        return response([
+        return response()->json([
             'message' => 'Logged Out'
         ], 200);
     }
