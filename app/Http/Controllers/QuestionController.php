@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\ApiService;
+use Exception as ExceptionAlias;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 
@@ -15,14 +17,19 @@ class QuestionController extends Controller
 
     }
 
+    /**
+     * @throws ExceptionAlias
+     */
     public function index(){
-        $res = $this->api
+        return $this->api
             ->sendRequest('questions');
-
-        return $res;
     }
 
-    public function show($id){
+    /**
+     * @throws ExceptionAlias
+     */
+    public function show($id): JsonResponse
+    {
         $res = $this->api
             ->sendRequest('questions/'.$id);
 
