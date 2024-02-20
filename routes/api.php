@@ -30,3 +30,7 @@ Route::group(['prefix'=>'ext','middleware'=>['auth:sanctum','log']],function(){
     Route::post('/logout',[AuthController::class, 'logout']);
 });
 
+Route::get('/test', function(){
+
+});
+

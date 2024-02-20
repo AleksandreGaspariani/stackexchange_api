@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use App\Services\ApiService;
 use App\Services\RequestLogService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -23,28 +24,30 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @throws Exception
      */
-    public function index(): UserCollection
+    public function index(): JsonResponse
     {
 
         $response = $this->api
             ->addParam(['order' => 'desc'])
             ->sendRequest('users');
 
-        return new UserCollection($response);
+        $data = $response['items'];
+
+        return response()->json(UserResource::collection($data));
     }
 
     /**
      * Display the specified resource.
      * @throws Exception
      */
-    public function show(string $id): UserCollection
+    public function show(string $id): JsonResponse
     {
         $user = $this->api
             ->sendRequest('users/'.$id);
 
         if (empty($user['items'])){
             throw new \Exception('UserCollection not found');
-        };
+        }
 
         $questions = $this->api
             ->addParam(['filter' => 'total'])
@@ -54,11 +57,9 @@ class UserController extends Controller
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/'.$id.'/answers');
 
-        return new UserCollection([
-            'UserCollection' => $user['items'][0]['display_name'],
-            'Total Answers' => $answers['total'],
-            'Total Questions' => $questions['total']
-        ]);
+        $data = array_merge($user['items'][0],['total_questions' => $questions['total'],'total_answers' => $answers['total']]);
+
+        return response()->json(new UserResource($data));
 
     }
 }

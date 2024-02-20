@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\QuestionCollection;
 use App\Http\Resources\QuestionResource;
-use App\Models\User;
 use App\Services\ApiService;
 use Exception as ExceptionAlias;
-use http\Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 
 class QuestionController extends Controller
@@ -25,49 +20,31 @@ class QuestionController extends Controller
     /**
      * @throws ExceptionAlias
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
 
-//        $collection = collect([]);
-//        $resource = new QuestionResource(User::first());
-//        $resources = QuestionResource::collection(User::get());
+        $response = $this->api->sendRequest('questions');
 
+        $data = $response['items'];
 
-//        dd();
-
-        $collection = $this->api->sendRequest('questions');
-
-//        return response()->json($collection);
-
-        return QuestionResource::collection($collection);
+        return response()->json(QuestionResource::collection($data));
 
     }
 
     /**
      * @throws ExceptionAlias
      */
-    public function show($id): QuestionResource
+    public function show($id): JsonResponse
     {
 
-        $resource = $this->api->sendRequest('questions/'.$id);
+        $response = $this->api->sendRequest('questions/'.$id);
 
-//        return response()->json($resource);
+        if (!isset($response['items'])) {
+            throw new \Exception('Item is not isset');
+        }
 
-        return new QuestionResource($resource);
+        $data = $response['items'][0];
 
-//        $response = new ;
-
-//        if (empty($response['items'])){ throw new \Exception('Question not found or it deleted'); }
-
-//        $userId = $response['owner']['user_id'];
-
-//      UserResource /\
-
-//        return response()->json([
-//            'Question' => $response['title'],
-//            'Publisher' => $response['owner']['display_name'],
-//        ]);
-
-        return new QuestionResource();
+        return response()->json(new QuestionResource($data));
     }
 }
