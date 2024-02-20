@@ -3,8 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionCollection;
+use App\Http\Resources\QuestionResource;
+use App\Models\User;
 use App\Services\ApiService;
 use Exception as ExceptionAlias;
+use http\Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 
 class QuestionController extends Controller
@@ -19,32 +25,49 @@ class QuestionController extends Controller
     /**
      * @throws ExceptionAlias
      */
-    public function index(): QuestionCollection
+    public function index(): AnonymousResourceCollection
     {
-        return new QuestionCollection([
-           $this->api
-            ->sendRequest('questions')
-        ]);
+
+//        $collection = collect([]);
+//        $resource = new QuestionResource(User::first());
+//        $resources = QuestionResource::collection(User::get());
+
+
+//        dd();
+
+        $collection = $this->api->sendRequest('questions');
+
+//        return response()->json($collection);
+
+        return QuestionResource::collection($collection);
+
     }
 
     /**
      * @throws ExceptionAlias
      */
-    public function show($id): QuestionCollection
+    public function show($id): QuestionResource
     {
-        $res = $this->api
-            ->sendRequest('questions/'.$id);
 
-        if (empty($res['items'])){ throw new \Exception('Question not found or it deleted'); }
+        $resource = $this->api->sendRequest('questions/'.$id);
 
-        $userId = $res['items'][0]['owner']['user_id'];
+//        return response()->json($resource);
 
-        $userInfo = $this->api
-            ->sendRequest('users/'.$userId);
+        return new QuestionResource($resource);
 
-        return new QuestionCollection([
-            'Question' => $res['items'][0]['title'],
-            'Publisher' => $userInfo['items'][0]['display_name'],
-        ]);
+//        $response = new ;
+
+//        if (empty($response['items'])){ throw new \Exception('Question not found or it deleted'); }
+
+//        $userId = $response['owner']['user_id'];
+
+//      UserResource /\
+
+//        return response()->json([
+//            'Question' => $response['title'],
+//            'Publisher' => $response['owner']['display_name'],
+//        ]);
+
+        return new QuestionResource();
     }
 }
