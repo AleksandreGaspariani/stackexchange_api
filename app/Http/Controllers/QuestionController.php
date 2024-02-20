@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\QuestionCollection;
 use App\Services\ApiService;
 use Exception as ExceptionAlias;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 
 class QuestionController extends Controller
