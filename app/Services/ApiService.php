@@ -31,6 +31,9 @@ class ApiService
         return $this;
     }
 
+    /**
+     * @throws \Exception
+     */
     function sendRequest($endPoint){
         $baseFilter = [
             'site' => 'stackoverflow',
