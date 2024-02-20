@@ -51,5 +51,6 @@ class ApiService
             throw new \Exception('API Error.');
         };
 
+        return true;
     }
 }
