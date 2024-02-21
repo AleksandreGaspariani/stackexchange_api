@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,9 +15,9 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
 
-        $creeds = $request->validated();
+        $creds = $request->validated();
 
-        if (Auth::attempt($creeds)){
+        if (Auth::attempt($creds)){
 
             $token = Auth::user()->createToken(config('auth.tokenName'))->plainTextToken;
 
@@ -30,24 +30,20 @@ class AuthController extends Controller
 
         }else {
             return response()->json([
-                'message' => 'Bad Creeds'
+                'message' => 'Bad creds'
             ], 400);
         }
     }
 
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
 
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8'
-        ]);
+        $creds = $request->validated();
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password'])
+            'name' => $creds['name'],
+            'email' => $creds['email'],
+            'password' => Hash::make($creds['password'])
         ]);
 
 //      Creating setting for registered user
