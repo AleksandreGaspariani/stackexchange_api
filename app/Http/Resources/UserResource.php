@@ -18,15 +18,9 @@ class UserResource extends JsonResource
             'badge_counts' => $this['badge_counts'],
             'account_id' => $this['account_id'],
             'display_name' => $this['display_name'],
+            'total_questions' => $this->when(isset($this['total_questions']),$this['total_questions']),
+            'total_answers' => $this->when(isset($this['total_answers']),$this['total_answers'])
         ];
-
-        if (isset($this['total_questions'])){
-            $output['total_questions'] = $this['total_questions'];
-        }
-
-        if (isset($this['total_answers'])){
-            $output['total_answers'] = $this['total_answers'];
-        }
 
         return $output;
     }
