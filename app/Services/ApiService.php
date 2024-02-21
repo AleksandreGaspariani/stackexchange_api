@@ -31,6 +31,9 @@ class ApiService
         return $this;
     }
 
+    /**
+     * @throws \Exception
+     */
     function sendRequest($endPoint){
         $baseFilter = [
             'site' => 'stackoverflow',
@@ -48,5 +51,6 @@ class ApiService
             throw new \Exception('API Error.');
         };
 
+        return true;
     }
 }

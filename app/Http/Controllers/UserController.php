@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserRequestLog;
-use App\Models\UserSettings;
+use App\Http\Resources\UserResource;
 use App\Services\ApiService;
 use App\Services\RequestLogService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Exception;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -23,47 +22,32 @@ class UserController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @throws Exception
      */
-    public function index()
+    public function index(): JsonResponse
     {
 
         $response = $this->api
             ->addParam(['order' => 'desc'])
             ->sendRequest('users');
 
-        return response()->json($response);
+        $data = $response['items'];
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json(UserResource::collection($data));
     }
 
     /**
      * Display the specified resource.
+     * @throws Exception
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         $user = $this->api
             ->sendRequest('users/'.$id);
 
         if (empty($user['items'])){
-            return response()->json([
-                'message' => 'user not found.',
-            ], 400);
-        };
+            throw new \Exception('UserCollection not found');
+        }
 
         $questions = $this->api
             ->addParam(['filter' => 'total'])
@@ -73,39 +57,9 @@ class UserController extends Controller
             ->addParam(['filter' => 'total'])
             ->sendRequest('users/'.$id.'/answers');
 
+        $data = array_merge($user['items'][0],['total_questions' => $questions['total'],'total_answers' => $answers['total']]);
 
+        return response()->json(new UserResource($data));
 
-        return response()->json([
-            'Username' => $user['items'][0]['display_name'],
-            'Total Answers'=> $answers['total'],
-            'Total Quetions'=> $questions['total'],
-        ]);
-
-    }
-
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

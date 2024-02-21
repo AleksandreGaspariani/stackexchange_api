@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\QuestionResource;
 use App\Services\ApiService;
-use Illuminate\Http\Request;
+use Exception as ExceptionAlias;
+use Illuminate\Http\JsonResponse;
 
 
 class QuestionController extends Controller
@@ -15,25 +17,34 @@ class QuestionController extends Controller
 
     }
 
-    public function index(){
-        $res = $this->api
-            ->sendRequest('questions');
+    /**
+     * @throws ExceptionAlias
+     */
+    public function index(): JsonResponse
+    {
 
-        return $res;
+        $response = $this->api->sendRequest('questions');
+
+        $data = $response['items'];
+
+        return response()->json(QuestionResource::collection($data));
+
     }
 
-    public function show($id){
-        $res = $this->api
-            ->sendRequest('questions/'.$id);
+    /**
+     * @throws ExceptionAlias
+     */
+    public function show($id): JsonResponse
+    {
 
-        $userId = $res['items'][0]['owner']['user_id'];
+        $response = $this->api->sendRequest('questions/'.$id);
 
-        $userInfo = $this->api
-            ->sendRequest('users/'.$userId);
+        if (!isset($response['items'])) {
+            throw new \Exception('Item is not isset');
+        }
 
-        return response()->json([
-            'Question Title' => $res['items'][0]['title'],
-            'Publisher' => $userInfo['items'][0]['display_name'],
-        ]);
+        $data = $response['items'][0];
+
+        return response()->json(new QuestionResource($data));
     }
 }

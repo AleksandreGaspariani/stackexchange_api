@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request): JsonResponse
+    {
 
         $creds = $request->validated();
 
@@ -28,26 +30,19 @@ class AuthController extends Controller
 
         }else {
             return response()->json([
-                'message' => 'Bad Creds'
+                'message' => 'Bad creds'
             ], 400);
         }
     }
 
-    public function register(Request $request){
-
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8'
-        ]);
+    public function register(RegisterRequest $request): JsonResponse
+    {
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password'])
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password'])
         ]);
-
-//      Creating setting for registered user
 
         $user->settings()->create([
             'user_id' => $user->id,
@@ -64,9 +59,9 @@ class AuthController extends Controller
         return response()->json($response);
     }
 
-    public function logout()
+    public function logout(): JsonResponse
     {
-        Auth::user()->tokens()->where('token', request()->bearerToken())->delete();
+        Auth::user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logged Out'
