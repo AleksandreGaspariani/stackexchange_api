@@ -49,7 +49,7 @@ class ApiService
             return $res->json();
         }elseif ($res->failed()){
             throw new \Exception('API Error.');
-        };
+        }
 
         return true;
     }
